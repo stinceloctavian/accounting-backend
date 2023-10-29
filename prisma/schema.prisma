@@ -1,0 +1,61 @@
+// Prisma schema file,
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  password  String
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  invoices  Invoice[]
+  bills     Bill[]
+
+  @@map("users")
+}
+
+model Invoice {
+  id              Int      @id @default(autoincrement())
+  amount          Float
+  due_at          DateTime
+  document_number String
+  status          String?
+  contact_email   String?
+  contact_name    String?
+  contact_phone   String?
+  contact_address String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [user_id], references: [id])
+  user_id         Int
+
+  @@map("invoices")
+}
+
+model Bill {
+  id              Int      @id @default(autoincrement())
+  amount          Float
+  due_at          DateTime
+  document_number String
+  status          String?
+  contact_email   String?
+  contact_name    String?
+  contact_phone   String?
+  contact_address String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [user_id], references: [id])
+  user_id         Int
+
+  @@map("bills")
+}
